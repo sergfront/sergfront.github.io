@@ -8,14 +8,27 @@
 
   /* ---------- i18n ---------- */
   const UA = {
+    nav_work: 'Портфоліо', nda: 'Під NDA',
+    t_cv: 'Музей «Голоси мирних»', t_erp: 'ERP для меблевого виробництва', t_crm: 'CRM і workflow SaaS', t_r1: 'Онлайн-школа R1',
+    d_vf: 'Розробив з нуля в агенції: від верстки до інтеграцій. Дизайн досі на сайті.',
+    d_cv: 'Інтерактивний онлайн-музей історій війни. Власні анімації на JavaScript і Canvas.',
+    d_erp: 'Підсистема прайс-листів від початку до кінця, ~40 екранів таблиць у реальному часі, автотести з нуля: ~990 E2E і ~500 unit.',
+    d_crm: 'UI-кіт на 125 компонентів, інтеграція календаря й пошти, завантаження Kanban з ~60 до ~20 с.',
+    d_hp: 'Бізнес-парк у Києві. Інтерактивний анімований сайт.',
+    d_iq: 'Будівельна компанія. Анімований корпоративний сайт.',
+    d_ex: 'Виставковий центр. Інтерактивний сайт.',
+    d_lm: 'Маркетплейс гостьових публікацій і посилань.',
+    d_gg: 'Сервіс викупу й обміну гаджетів.',
+    d_ac: 'Сайт бренду Roche з каталогом продукції.',
+    d_r1: 'Сайт онлайн-школи трьома мовами.',
     skip: 'Перейти до робіт', short_name: 'С. Антонюк',
-    nav_work: 'Роботи', nav_products: 'Продукти', nav_path: 'Досвід', nav_contact: 'Контакти',
+    nav_path: 'Досвід', nav_contact: 'Контакти',
     lang_switch: 'EN', name_1: 'Сергій', name_2: 'Антонюк',
     role: 'Frontend-розробник: React, TypeScript, Vue.js',
     lede: 'Роблю інтерфейси, якими люди користуються щодня, — від кар’єрного порталу Vodafone Україна до екранів ERP для цеху з сотнями рядків у реальному часі. Дев’ять років досвіду, працюю віддалено з Київщини.',
     cta_contact: 'Написати мені', cta_cv: 'Завантажити CV',
-    work_h: 'Вибрані роботи',
-    work_p: 'Живі сайти, які я зробив або над якими працював у студіях та агенціях. Відкривайте будь-який — усі вони досі онлайн.',
+    work_h: 'Портфоліо',
+    work_p: 'Сайти й продукти, які я робив у студіях та агенціях. Наведіть на проєкт, щоб побачити деталі; живі сайти відкриваються в новій вкладці.',
     f1_p: 'Розробив з нуля в агенції VIS-A-VIS: від верстки до інтеграцій. Дизайн досі на сайті.',
     f1_also: 'А також багато задач на vodafone.ua, Vodafone Pay і raiffeisen.ua.',
     f2_h: 'Музей «Голоси мирних»',
@@ -270,28 +283,19 @@
     requestAnimationFrame(step);
   }
 
-  /* ---------- project preview that follows the cursor ---------- */
-  const peek = document.querySelector('.peek');
-  const peekImg = peek.querySelector('img');
+  /* ---------- portfolio cards: gentle 3D tilt toward the cursor ---------- */
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  document.querySelectorAll('.card').forEach((c, n) => c.style.setProperty('--n', n % 3));
+  document.querySelectorAll('.art--grid i').forEach((c, i) => c.style.setProperty('--i', i % 16));
   if (fine && !reduce) {
-    let px = 0, py = 0, tx = 0, ty = 0, raf = 0;
-    const follow = () => {
-      px += (tx - px) * 0.16; py += (ty - py) * 0.16;
-      peek.style.translate = `${px + 28}px ${py - 110}px`;
-      raf = Math.abs(tx - px) + Math.abs(ty - py) > 0.3 ? requestAnimationFrame(follow) : 0;
-    };
-    document.querySelectorAll('.row').forEach(row => {
-      row.addEventListener('pointerenter', e => {
-        peekImg.src = row.dataset.img;
-        if (!peek.classList.contains('is-on')) { px = tx = e.clientX; py = ty = e.clientY; }
-        peek.classList.add('is-on');
+    document.querySelectorAll('.card__in').forEach(el => {
+      el.addEventListener('pointermove', e => {
+        const b = el.getBoundingClientRect();
+        const x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5;
+        el.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
       });
-      row.addEventListener('pointerleave', () => peek.classList.remove('is-on'));
-      row.addEventListener('pointermove', e => {
-        tx = Math.min(e.clientX, innerWidth - 380); ty = e.clientY;
-        if (!raf) raf = requestAnimationFrame(follow);
-      });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
     });
   }
 
