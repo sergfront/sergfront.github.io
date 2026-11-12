@@ -33,6 +33,7 @@
   <nav class="bar__nav" aria-label="Sections">
     <a href="#work" data-i18n="nav_work">Portfolio</a>
     <a href="#path" data-i18n="nav_path">Experience</a>
+    <a href="#skills" data-i18n="nav_skills">Skills</a>
     <a href="#contact" data-i18n="nav_contact">Contact</a>
   </nav>
   <div class="bar__tools">
@@ -66,7 +67,6 @@
   <section id="work" class="work" aria-labelledby="work-h">
     <div class="sec-head">
       <h2 id="work-h" data-i18n="work_h">Portfolio</h2>
-      <p data-i18n="work_p">Sites and products I built at studios and agencies. Hover a project for details; live sites open in a new tab.</p>
     </div>
     <ul class="grid" role="list">
       <li class="card card--wide reveal"><a class="card__in" href="https://career.vodafone.ua/" target="_blank" rel="noopener">
@@ -194,7 +194,7 @@
 
   <section id="path" class="path" aria-labelledby="path-h">
     <div class="sec-head">
-      <h2 id="path-h" data-i18n="path_h">Nine years, five teams</h2>
+      <h2 id="path-h" data-i18n="path_h">Experience</h2>
     </div>
     <ol class="timeline" role="list">
       <li><span class="tl__years">2022–2026</span><span class="tl__where">AltSolution</span><span class="tl__what" data-i18n="t1">B2B SaaS, ERP and 11 Laravel projects</span></li>
@@ -203,13 +203,19 @@
       <li><span class="tl__years">2018–2019</span><span class="tl__where">ZORELIT</span><span class="tl__what" data-i18n="t4">20+ sites from scratch, animated and interactive ones among them</span></li>
       <li><span class="tl__years">2017–2018</span><span class="tl__where" data-i18n="t5w">Irene Bukur, freelance</span><span class="tl__what" data-i18n="t5">Landing pages and responsive sites</span></li>
     </ol>
-    <div class="stack">
-      <h3 data-i18n="stack_h">Tools I use</h3>
-      <p><b>Frontend</b> React, TypeScript, Vue.js 3, Next.js, Nuxt, Zustand, Redux, Vuex</p>
-      <p><b>UI</b> AG Grid Enterprise, MUI, Tailwind CSS, SCSS, Canvas and SVG animation, design systems, Figma</p>
-      <p><b data-i18n="stack_test">Testing</b> Vitest, React Testing Library, Playwright</p>
-      <p><b>Backend</b> Node.js, PHP and Laravel, PostgreSQL, MySQL, Redis, Docker</p>
-      <p><b data-i18n="stack_ai">Daily</b> Claude Code, Codex, Git, GitLab CI</p>
+  </section>
+
+  <section id="skills" class="skills" aria-labelledby="skills-h">
+    <div class="sec-head">
+      <h2 id="skills-h" data-i18n="skills_h">Skills</h2>
+    </div>
+    <div class="bento">
+      <div class="skill skill--big reveal"><h3 data-i18n="g_front">Frontend</h3><ul class="chips" role="list"><li>React</li><li>TypeScript</li><li>JavaScript (ES6+)</li><li>Vue.js 3</li><li>Next.js</li><li>Nuxt</li><li>Zustand</li><li>Redux</li><li>Vuex</li><li>React Router</li><li>HTML5</li><li>CSS3</li></ul></div>
+      <div class="skill reveal"><h3 data-i18n="g_ui">UI & data</h3><ul class="chips" role="list"><li>AG Grid Enterprise</li><li>MUI</li><li>PrimeReact</li><li>dnd-kit</li><li>ECharts</li><li>Chart.js</li><li>pdf.js</li><li>SheetJS</li></ul></div>
+      <div class="skill reveal"><h3 data-i18n="g_style">Styling & motion</h3><ul class="chips" role="list"><li>SCSS</li><li>CSS Modules</li><li>Tailwind CSS</li><li>Canvas</li><li>SVG</li><li>JS animation</li><li>Design systems</li><li>Accessibility</li><li>Figma</li></ul></div>
+      <div class="skill reveal"><h3 data-i18n="g_test">Testing</h3><ul class="chips" role="list"><li>Vitest</li><li>React Testing Library</li><li>Playwright</li><li>Unit & E2E</li></ul></div>
+      <div class="skill reveal"><h3 data-i18n="g_back">Backend</h3><ul class="chips" role="list"><li>Node.js</li><li>Fastify</li><li>PHP</li><li>Laravel</li><li>PostgreSQL</li><li>MySQL</li><li>Redis</li><li>Docker</li></ul></div>
+      <div class="skill reveal"><h3 data-i18n="g_tools">Tools & AI</h3><ul class="chips" role="list"><li>Git</li><li>GitLab CI</li><li>Vite</li><li>Webpack</li><li>ESLint</li><li>Sentry</li><li>Jira</li><li>Claude Code</li><li>Codex</li></ul></div>
     </div>
   </section>
 

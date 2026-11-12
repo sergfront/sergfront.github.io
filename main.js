@@ -50,7 +50,7 @@
     c2_h: 'CRM і workflow SaaS',
     c2_p: 'CRM з workflow, вбудованим поштовим клієнтом і календарем. Розвивав UI-кіт і дизайн-токени, написав інтеграцію календаря і прискорив місця, які клієнти відчували найбільше.',
     c2_s1: 'завантаження Kanban для великого клієнта, було ~60 с', c2_s2: 'компонентів в UI-кіті', c2_s3: 'швидші списки в картках контактів',
-    path_h: 'Дев’ять років, п’ять команд',
+    path_h: 'Досвід роботи', skills_h: 'Навички', nav_skills: 'Навички', g_ui: 'UI і дані', g_style: 'Стилі й анімація', g_test: 'Тестування', g_back: 'Бекенд', g_tools: 'Інструменти й AI',
     t1: 'B2B SaaS, ERP і 11 проєктів на Laravel', t2: 'Агенція: Vodafone, Raiffeisen Bank, «Оберіг»',
     t3w: 'Хорошоп', t3: 'Рефакторинг і нові функції великої e-commerce-платформи',
     t4: '20+ сайтів з нуля, серед них анімовані й інтерактивні',
@@ -298,6 +298,12 @@
       el.addEventListener('pointerleave', () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
     });
   }
+
+  /* ---------- skills: spotlight follows the cursor ---------- */
+  document.querySelectorAll('.skill').forEach(el => el.addEventListener('pointermove', e => {
+    const b = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - b.left) + 'px'); el.style.setProperty('--my', (e.clientY - b.top) + 'px');
+  }));
 
   /* ---------- magnetic buttons ---------- */
   if (fine && !reduce) {

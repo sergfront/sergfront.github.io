@@ -300,3 +300,31 @@ main > section:not(.hero) { max-width: var(--max); margin: 0 auto; padding: clam
   .art--grid i, .art--kanban i { animation: none !important; }
   .card__in, .card__media img, .card__info, .card__shade { transition: none !important; }
 }
+
+/* ---------- skills ---------- */
+.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.6vw, 22px); }
+.skill {
+  position: relative; padding: clamp(22px, 2.4vw, 32px); border-radius: 18px; overflow: hidden;
+  background: var(--paper-2); border: 1px solid var(--line); isolation: isolate;
+}
+.skill::before { /* spotlight that follows the cursor */
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .4s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--cell), .18), transparent 60%);
+}
+.skill:hover::before { opacity: 1; }
+.skill--big { grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between;
+  background: radial-gradient(130% 100% at 0% 0%, #2b3270 0%, #161b44 60%, #0e1230 100%); border-color: #262c5c; color: #eef0f7; }
+.skill h3 { font-size: clamp(20px, 1.8vw, 26px); letter-spacing: -0.025em; margin-bottom: 18px; }
+.skill--big h3 { font-size: clamp(30px, 3.2vw, 48px); letter-spacing: -0.04em; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li {
+  font-size: 15px; font-weight: 500; padding: 7px 13px; border-radius: 99px; border: 1px solid var(--line);
+  background: var(--paper); transition: background .25s, color .25s, border-color .25s, transform .35s cubic-bezier(.2,.8,.1,1);
+}
+.chips li:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); transform: translateY(-2px); }
+.skill--big .chips li { font-size: clamp(16px, 1.4vw, 19px); padding: 9px 16px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.16); color: #eef0f7; }
+.skill--big .chips li:hover { background: #eef0f7; color: #141a3a; border-color: #eef0f7; }
+.skill--big::before { background: radial-gradient(460px circle at var(--mx, 50%) var(--my, 50%), rgba(143,140,255,.28), transparent 60%); }
+@media (max-width: 1000px) { .bento { grid-template-columns: repeat(2, 1fr); } .skill--big { grid-column: span 2; grid-row: auto; } }
+@media (max-width: 620px) { .bento { grid-template-columns: 1fr; } .skill--big { grid-column: auto; } }
+.bento .skill:last-child { grid-column: 1 / -1; }
