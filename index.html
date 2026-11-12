@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serhii Antoniuk — Frontend Developer</title>
+<meta name="description" content="Frontend developer: React, TypeScript, Vue.js. 9 years of commercial experience — Vodafone Ukraine careers portal, interactive sites, B2B ERP and CRM products.">
+<meta property="og:title" content="Serhii Antoniuk — Frontend Developer">
+<meta property="og:description" content="React, TypeScript, Vue.js. Vodafone Ukraine careers portal, interactive sites, B2B ERP and CRM products.">
+<meta property="og:image" content="img/vodafone-careers.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // theme + language before paint
+  (function () {
+    var t = null, l = null;
+    try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'ua' || q === 'en') l = q;
+    if (!l) l = (navigator.language || '').toLowerCase().indexOf('uk') === 0 ? 'ua' : 'en';
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.lang = l === 'ua' ? 'uk' : 'en';
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#work" data-i18n="skip">Skip to work</a>
+
+<header class="bar">
+  <a class="bar__name" href="#top" data-i18n="short_name">S. Antoniuk</a>
+  <nav class="bar__nav" aria-label="Sections">
+    <a href="#work" data-i18n="nav_work">Work</a>
+    <a href="#products" data-i18n="nav_products">Products</a>
+    <a href="#path" data-i18n="nav_path">Experience</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+  </nav>
+  <div class="bar__tools">
+    <button class="tool" id="lang" type="button" aria-label="Switch language"><span data-i18n="lang_switch">UA</span></button>
+    <button class="tool" id="theme" type="button" aria-label="Toggle dark mode">
+      <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-name">
+    <canvas class="hero__scene" aria-hidden="true"></canvas>
+    <div class="hero__inner">
+      <h1 id="hero-name" class="hero__name">
+        <span class="line" data-split data-i18n="name_1">Serhii</span>
+        <span class="line" data-split data-i18n="name_2">Antoniuk</span>
+      </h1>
+      <div class="hero__foot">
+        <p class="hero__role" data-i18n="role">Frontend developer: React, TypeScript, Vue.js</p>
+        <p class="hero__lede" data-i18n="lede">I build interfaces people use every day — from the Vodafone Ukraine careers portal to shop-floor ERP screens with hundreds of live rows. Nine years in, working remotely from Kyiv.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#contact" data-magnetic data-i18n="cta_contact">Get in touch</a>
+          <a class="btn btn--ghost" id="cv-link" href="cv/Antoniuk_Serhii_Frontend_CV_EN.pdf" download data-magnetic data-i18n="cta_cv">Download CV</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <h2 id="work-h" data-i18n="work_h">Selected work</h2>
+      <p data-i18n="work_p">Live sites I built or worked on at studios and agencies. Open any of them — they are all still online.</p>
+    </div>
+
+    <article class="feature reveal">
+      <a class="feature__shot" href="https://career.vodafone.ua/" target="_blank" rel="noopener">
+        <img src="img/vodafone-careers.webp" width="1200" height="675" alt="Vodafone Ukraine careers portal, home page" loading="lazy">
+      </a>
+      <div class="feature__text">
+        <h3>Vodafone Ukraine — careers portal</h3>
+        <p data-i18n="f1_p">Built from scratch at the VIS-A-VIS agency, from markup to integrations. The design is still live today.</p>
+        <p class="feature__also" data-i18n="f1_also">Also many tasks on vodafone.ua, Vodafone Pay and raiffeisen.ua.</p>
+        <a class="link" href="https://career.vodafone.ua/" target="_blank" rel="noopener">career.vodafone.ua</a>
+      </div>
+    </article>
+
+    <article class="feature feature--flip reveal">
+      <a class="feature__shot feature__shot--dark" href="https://civilvoicesmuseum.org/expositions/cloud" target="_blank" rel="noopener">
+        <img src="img/civil-voices.webp" width="1200" height="491" alt="Civil Voices Museum, interactive word cloud exposition" loading="lazy">
+      </a>
+      <div class="feature__text">
+        <h3 data-i18n="f2_h">Civil Voices Museum</h3>
+        <p data-i18n="f2_p">An interactive online museum of war stories. Custom JavaScript and Canvas animations, no animation library.</p>
+        <a class="link" href="https://civilvoicesmuseum.org/expositions/cloud" target="_blank" rel="noopener">civilvoicesmuseum.org</a>
+      </div>
+    </article>
+
+    <h3 class="list-h" id="products" data-i18n="list_h">Brand sites and products</h3>
+    <ul class="list" role="list">
+      <li class="row" data-img="img/horizon-park.webp">
+        <a href="https://horizon-park.com.ua/" target="_blank" rel="noopener">
+          <span class="row__title">Horizon Park</span>
+          <span class="row__desc" data-i18n="p_horizon">Business park in Kyiv — interactive, animated site</span>
+          <span class="row__where">ZORELIT</span>
+          <img class="row__thumb" src="img/horizon-park.webp" alt="" loading="lazy" width="1200" height="675">
+        </a>
+      </li>
+      <li class="row" data-img="img/iq-construction.webp">
+        <a href="https://iqconstruction.com.ua/" target="_blank" rel="noopener">
+          <span class="row__title">IQ Construction</span>
+          <span class="row__desc" data-i18n="p_iq">Construction company — animated corporate site</span>
+          <span class="row__where">ZORELIT</span>
+          <img class="row__thumb" src="img/iq-construction.webp" alt="" loading="lazy" width="1200" height="675">
+        </a>
+      </li>
+      <li class="row" data-img="img/expoplaza.webp">
+        <a href="https://expoplaza.kiev.ua/" target="_blank" rel="noopener">
+          <span class="row__title">Kyiv Expo Plaza</span>
+          <span class="row__desc" data-i18n="p_expo">Exhibition centre — interactive site</span>
+          <span class="row__where">ZORELIT</span>
+          <img class="row__thumb" src="img/expoplaza.webp" alt="" loading="lazy" width="1200" height="694">
+        </a>
+      </li>
+      <li class="row" data-img="img/links-me.webp">
+        <a href="https://links.me/" target="_blank" rel="noopener">
+          <span class="row__title">links.me</span>
+          <span class="row__desc" data-i18n="p_links">Guest-post and backlink marketplace</span>
+          <span class="row__where">Laravel</span>
+          <img class="row__thumb" src="img/links-me.webp" alt="" loading="lazy" width="1200" height="675">
+        </a>
+      </li>
+      <li class="row" data-img="img/1guygadget.webp">
+        <a href="https://buy.1guygadget.com/" target="_blank" rel="noopener">
+          <span class="row__title">1GuyGadget</span>
+          <span class="row__desc" data-i18n="p_1guy">Gadget buyback and trade-in service</span>
+          <span class="row__where">Laravel</span>
+          <img class="row__thumb" src="img/1guygadget.webp" alt="" loading="lazy" width="1200" height="641">
+        </a>
+      </li>
+      <li class="row" data-img="img/accu-chek.webp">
+        <a href="https://accu-chek.com.ua/" target="_blank" rel="noopener">
+          <span class="row__title">Accu-Chek Ukraine</span>
+          <span class="row__desc" data-i18n="p_accu">Roche brand website with product catalogue</span>
+          <span class="row__where">Laravel</span>
+          <img class="row__thumb" src="img/accu-chek.webp" alt="" loading="lazy" width="1200" height="675">
+        </a>
+      </li>
+      <li class="row" data-img="img/r1tv.webp">
+        <a href="https://r1tv.lv/" target="_blank" rel="noopener">
+          <span class="row__title">R1</span>
+          <span class="row__desc" data-i18n="p_r1">Online school website in three languages</span>
+          <span class="row__where">Laravel</span>
+          <img class="row__thumb" src="img/r1tv.webp" alt="" loading="lazy" width="1200" height="575">
+        </a>
+      </li>
+    </ul>
+    <p class="more">
+      <span data-i18n="more">Also worked on</span>
+      <a href="https://vodafone.ua/" target="_blank" rel="noopener">vodafone.ua</a>
+      <a href="https://raiffeisen.ua/" target="_blank" rel="noopener">raiffeisen.ua</a>
+      <a href="https://oberig.ua/" target="_blank" rel="noopener">oberig.ua</a>
+      <a href="https://horoshop.ua/ua/" target="_blank" rel="noopener">horoshop.ua</a>
+      <a href="https://vidimost.com/" target="_blank" rel="noopener">vidimost.com</a>
+      <a href="https://irenebukur.com/" target="_blank" rel="noopener">irenebukur.com</a>
+    </p>
+  </section>
+
+  <section class="cases" aria-labelledby="cases-h">
+    <div class="sec-head">
+      <h2 id="cases-h" data-i18n="cases_h">Behind a login</h2>
+      <p data-i18n="cases_p">The last four years went into two B2B products under NDA. No screenshots — here is what I did and what changed.</p>
+    </div>
+    <div class="case reveal">
+      <div class="case__text">
+        <h3 data-i18n="c1_h">Manufacturing ERP</h3>
+        <p class="case__stack">React 18, TypeScript, Zustand, AG Grid Enterprise</p>
+        <p data-i18n="c1_p">Orders, warehouse, truck planning and shop-floor terminals with barcode scanners. I built the price list subsystem end to end, about 40 data-grid screens with real-time updates, and the whole automated testing setup from zero.</p>
+      </div>
+      <dl class="stats">
+        <div><dt data-i18n="c1_s1">E2E tests in Playwright</dt><dd>~<span data-count="990">990</span></dd></div>
+        <div><dt data-i18n="c1_s2">business-logic coverage, from 0</dt><dd>~<span data-count="80">80</span>%</dd></div>
+        <div><dt data-i18n="c1_s3">unit tests in Vitest</dt><dd>~<span data-count="500">500</span></dd></div>
+      </dl>
+    </div>
+    <div class="case reveal">
+      <div class="case__text">
+        <h3 data-i18n="c2_h">CRM and workflow SaaS</h3>
+        <p class="case__stack">Vue.js 3, Vuex, JavaScript</p>
+        <p data-i18n="c2_p">A CRM with workflows, a built-in email client and calendar. I evolved the UI kit and design tokens, wrote the calendar integration and fixed the slow parts that clients felt most.</p>
+      </div>
+      <dl class="stats">
+        <div><dt data-i18n="c2_s1">Kanban load for a large client, was ~60 s</dt><dd>~<span data-count="20">20</span> s</dd></div>
+        <div><dt data-i18n="c2_s2">components in the UI kit</dt><dd><span data-count="125">125</span></dd></div>
+        <div><dt data-i18n="c2_s3">faster contact dropdowns</dt><dd>×<span data-count="3">3</span></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="path" class="path" aria-labelledby="path-h">
+    <div class="sec-head">
+      <h2 id="path-h" data-i18n="path_h">Nine years, five teams</h2>
+    </div>
+    <ol class="timeline" role="list">
+      <li><span class="tl__years">2022–2026</span><span class="tl__where">AltSolution</span><span class="tl__what" data-i18n="t1">B2B SaaS, ERP and 11 Laravel projects</span></li>
+      <li><span class="tl__years">2020–2022</span><span class="tl__where">VIS-A-VIS</span><span class="tl__what" data-i18n="t2">Agency work for Vodafone, Raiffeisen Bank, Oberig</span></li>
+      <li><span class="tl__years">2019–2020</span><span class="tl__where" data-i18n="t3w">Horoshop</span><span class="tl__what" data-i18n="t3">Refactoring and features on a large e-commerce platform</span></li>
+      <li><span class="tl__years">2018–2019</span><span class="tl__where">ZORELIT</span><span class="tl__what" data-i18n="t4">20+ sites from scratch, animated and interactive ones among them</span></li>
+      <li><span class="tl__years">2017–2018</span><span class="tl__where" data-i18n="t5w">Irene Bukur, freelance</span><span class="tl__what" data-i18n="t5">Landing pages and responsive sites</span></li>
+    </ol>
+    <div class="stack">
+      <h3 data-i18n="stack_h">Tools I use</h3>
+      <p><b>Frontend</b> React, TypeScript, Vue.js 3, Next.js, Nuxt, Zustand, Redux, Vuex</p>
+      <p><b>UI</b> AG Grid Enterprise, MUI, Tailwind CSS, SCSS, Canvas and SVG animation, design systems, Figma</p>
+      <p><b data-i18n="stack_test">Testing</b> Vitest, React Testing Library, Playwright</p>
+      <p><b>Backend</b> Node.js, PHP and Laravel, PostgreSQL, MySQL, Redis, Docker</p>
+      <p><b data-i18n="stack_ai">Daily</b> Claude Code, Codex, Git, GitLab CI</p>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <h2 id="contact-h" data-i18n="contact_h">Looking for a remote frontend role</h2>
+    <p data-i18n="contact_p">React + TypeScript or Vue.js, full time. I read and write English freely; calls I prefer in Ukrainian or Russian.</p>
+    <a class="contact__mail" href="mailto:sergefrontend@gmail.com" data-magnetic>sergefrontend@gmail.com</a>
+    <ul class="contact__links" role="list">
+      <li><a href="https://t.me/serhiy_fr_99" target="_blank" rel="noopener">Telegram</a></li>
+      <li><a href="https://www.linkedin.com/in/serhii-antoniuk-05b8b0171" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="cv/Antoniuk_Serhii_Frontend_CV_EN.pdf" download>CV (English)</a></li>
+      <li><a href="cv/Antoniuk_Serhii_Frontend_CV_UA.pdf" download>CV (українською)</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <p data-i18n="foot">Hand-written HTML, CSS and JavaScript. No frameworks, no animation libraries.</p>
+</footer>
+
+<figure class="peek" aria-hidden="true"><img alt=""></figure>
+<script src="main.js" defer></script>
+</body>
+</html>
