@@ -328,3 +328,4 @@ main > section:not(.hero) { max-width: var(--max); margin: 0 auto; padding: clam
 @media (max-width: 1000px) { .bento { grid-template-columns: repeat(2, 1fr); } .skill--big { grid-column: span 2; grid-row: auto; } }
 @media (max-width: 620px) { .bento { grid-template-columns: 1fr; } .skill--big { grid-column: auto; } }
 .bento .skill:last-child { grid-column: 1 / -1; }
+.grid { grid-auto-flow: dense; }
