@@ -329,3 +329,19 @@ main > section:not(.hero) { max-width: var(--max); margin: 0 auto; padding: clam
 @media (max-width: 620px) { .bento { grid-template-columns: 1fr; } .skill--big { grid-column: auto; } }
 .bento .skill:last-child { grid-column: 1 / -1; }
 .grid { grid-auto-flow: dense; }
+
+/* calmer default state: light tint over screenshots, clearer card edges */
+.card__media::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; transition: opacity .5s;
+  background: linear-gradient(180deg, rgba(20,26,61,.10) 0%, rgba(20,26,61,.22) 100%);
+}
+.card__in:hover .card__media::after, .card__in:focus-visible .card__media::after { opacity: 0; }
+.card__in {
+  border-color: color-mix(in srgb, var(--ink) 14%, transparent);
+  box-shadow: 0 1px 2px rgba(20,26,61,.06), 0 14px 32px -20px rgba(20,26,61,.35);
+}
+.card__in:hover, .card__in:focus-visible { box-shadow: 0 2px 4px rgba(20,26,61,.08), 0 30px 60px -28px rgba(var(--cell), .6); }
+:root[data-theme="dark"] .card__in { border-color: rgba(255,255,255,.10); box-shadow: 0 14px 32px -18px rgba(0,0,0,.7); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .card__in { border-color: rgba(255,255,255,.10); box-shadow: 0 14px 32px -18px rgba(0,0,0,.7); } }
+:root[data-theme="dark"] .card__media::after { background: linear-gradient(180deg, rgba(8,10,24,.22) 0%, rgba(8,10,24,.38) 100%); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .card__media::after { background: linear-gradient(180deg, rgba(8,10,24,.22) 0%, rgba(8,10,24,.38) 100%); } }
