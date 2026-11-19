@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="ad.size" content="width=320,height=480">
+<title>Color Sort — playable ad demo</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#1b1340;touch-action:none;-webkit-user-select:none;user-select:none}
+  canvas{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(function () {
+  'use strict';
+  // Demo playable: single HTML file, no external requests, MRAID-aware.
+  var STORE_URL = 'https://example.com/color-sort';
+  var CAP = 3;
+  var COLORS = { R: ['#ff5a6e', '#c2213b'], G: ['#4ee38a', '#16a356'], B: ['#55a8ff', '#1f5fd1'] };
+
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+
+  var tubes, selected, moving, moves, won, endCard, startTime, lastInput, particles, shake, hintOn, t0;
+
+  function reset() {
+    tubes = [['R', 'R', 'G'], ['G', 'G', 'B'], ['B', 'B', 'R'], []];
+    selected = -1; moving = null; moves = 0; won = false; endCard = false;
+    particles = []; shake = { i: -1, t: 0 }; hintOn = true;
+    startTime = lastInput = performance.now();
+  }
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  // ---- layout ----
+  function layout() {
+    var n = tubes.length;
+    var portrait = H >= W;
+    var tw = Math.min(W / (n + 1.2), portrait ? 78 : 90, H * 0.14);
+    var ball = tw * 0.72;
+    var th = ball * CAP + tw * 0.55;
+    var gap = (W - n * tw) / (n + 1);
+    var top = portrait ? H * 0.40 : H * 0.36;
+    var res = [];
+    for (var i = 0; i < n; i++) res.push({ x: gap + i * (tw + gap), y: top, w: tw, h: th, ball: ball });
+    return res;
+  }
+  function slotPos(L, i, k) { // k = index from bottom
+    var t = L[i];
+    return { x: t.x + t.w / 2, y: t.y + t.h - t.w * 0.18 - t.ball / 2 - k * t.ball };
+  }
+  function liftPos(L, i) { var t = L[i]; return { x: t.x + t.w / 2, y: t.y - t.ball * 0.85 }; }
+
+  // ---- drawing ----
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+  }
+  function drawBall(x, y, r, c) {
+    var g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+    g.addColorStop(0, '#fff'); g.addColorStop(0.18, COLORS[c][0]); g.addColorStop(1, COLORS[c][1]);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  function bg(now) {
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#3a1f86'); g.addColorStop(1, '#130b2e');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = 0.08; ctx.fillStyle = '#fff';
+    for (var i = 0; i < 18; i++) {
+      var x = (i * 97 + now * 0.01 * (i % 3 + 1)) % (W + 40) - 20, y = (i * 173) % H;
+      ctx.beginPath(); ctx.arc(x, y, 2 + (i % 4), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function text(s, x, y, size, color, weight) {
+    ctx.font = (weight || 800) + ' ' + size + 'px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(3, size * 0.14); ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.strokeText(s, x, y);
+    ctx.fillStyle = color; ctx.fillText(s, x, y);
+  }
+  function button(cx, cy, w, h, label, pulse) {
+    var s = 1 + (pulse ? Math.sin(performance.now() / 180) * 0.05 : 0);
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s);
+    var g = ctx.createLinearGradient(0, -h / 2, 0, h / 2);
+    g.addColorStop(0, '#ffd34d'); g.addColorStop(1, '#ff9a1f');
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; roundRect(-w / 2, -h / 2 + 5, w, h, h / 2); ctx.fill();
+    ctx.fillStyle = g; roundRect(-w / 2, -h / 2, w, h, h / 2); ctx.fill();
+    text(label, 0, 1, h * 0.42, '#fff');
+    ctx.restore();
+    return { x: cx - w / 2, y: cy - h / 2, w: w, h: h };
+  }
+
+  var ctaTop = null, ctaEnd = null;
+
+  function draw(now) {
+    bg(now);
+    var L = layout();
+    var title = Math.min(W * 0.09, 40);
+    text('Sort the colors!', W / 2, H * 0.16, title, '#fff');
+    text(won ? 'Perfect!' : 'One color per tube', W / 2, H * 0.16 + title * 1.1, title * 0.5, won ? '#ffd34d' : '#cfc6ff', 700);
+
+    for (var i = 0; i < tubes.length; i++) {
+      var t = L[i], dx = 0;
+      if (shake.i === i) { var p = (now - shake.t) / 350; if (p < 1) dx = Math.sin(p * 30) * 6 * (1 - p); else shake.i = -1; }
+      var full = tubes[i].length === CAP && tubes[i].every(function (c) { return c === tubes[i][0]; });
+      ctx.fillStyle = full ? 'rgba(255,211,77,.18)' : 'rgba(255,255,255,.10)';
+      roundRect(t.x + dx, t.y, t.w, t.h, t.w * 0.45); ctx.fill();
+      ctx.lineWidth = 3; ctx.strokeStyle = full ? '#ffd34d' : (selected === i ? '#fff' : 'rgba(255,255,255,.45)');
+      ctx.stroke();
+      for (var k = 0; k < tubes[i].length; k++) {
+        if (selected === i && k === tubes[i].length - 1) continue;
+        if (moving && moving.from === i && k === tubes[i].length - 1) continue;
+        var sp = slotPos(L, i, k); drawBall(sp.x + dx, sp.y, t.ball * 0.42, tubes[i][k]);
+      }
+      if (selected === i && tubes[i].length) {
+        var lp = liftPos(L, i), bob = Math.sin(now / 150) * 3;
+        drawBall(lp.x, lp.y + bob, t.ball * 0.42, tubes[i][tubes[i].length - 1]);
+      }
+    }
+
+    if (moving) {
+      var q = Math.min(1, (now - moving.t) / 260), e = q < 0.5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
+      var a = liftPos(L, moving.from), b = slotPos(L, moving.to, tubes[moving.to].length);
+      var mid = { x: (a.x + b.x) / 2, y: Math.min(a.y, b.y) - L[0].ball };
+      var x = (1 - e) * (1 - e) * a.x + 2 * (1 - e) * e * mid.x + e * e * b.x;
+      var y = (1 - e) * (1 - e) * a.y + 2 * (1 - e) * e * mid.y + e * e * b.y;
+      drawBall(x, y, L[0].ball * 0.42, moving.color);
+      if (q >= 1) finishMove();
+    }
+
+    // particles
+    for (var j = particles.length - 1; j >= 0; j--) {
+      var pt = particles[j]; pt.vy += 0.25; pt.x += pt.vx; pt.y += pt.vy; pt.life--;
+      ctx.fillStyle = pt.c; ctx.fillRect(pt.x, pt.y, 6, 10);
+      if (pt.life <= 0) particles.splice(j, 1);
+    }
+
+    // tutorial hand
+    if (hintOn && !won && now - lastInput > 900) drawHand(L, now);
+
+    // persistent CTA
+    ctaTop = button(W - 64, 34, 104, 40, 'INSTALL', false);
+
+    if (endCard) drawEndCard(now);
+  }
+
+  function drawHand(L, now) {
+    var from = moves === 0 ? 0 : -1, to = 3;
+    if (from < 0) return;
+    var p = ((now - lastInput) % 1800) / 1800;
+    var a = slotPos(L, from, 2), b = slotPos(L, to, 0);
+    var tgt = p < 0.5 ? a : b, pressed = (p % 0.5) > 0.3;
+    var x = tgt.x + 14, y = tgt.y + 18 + (pressed ? 6 : 0);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(-0.35);
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#222'; ctx.lineWidth = 2;
+    roundRect(-9, -2, 18, 34, 9); ctx.fill(); ctx.stroke();
+    roundRect(-7, 26, 34, 30, 10); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    if (pressed) { ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(tgt.x, tgt.y, 26, 0, Math.PI * 2); ctx.stroke(); }
+  }
+
+  function drawEndCard(now) {
+    ctx.fillStyle = 'rgba(10,6,30,.82)'; ctx.fillRect(0, 0, W, H);
+    var s = Math.min(W, H);
+    // icon
+    var land = W > H, iw = s * (land ? 0.24 : 0.28), ix = W / 2 - iw / 2, iy = H * (land ? 0.08 : 0.22);
+    var g = ctx.createLinearGradient(ix, iy, ix + iw, iy + iw);
+    g.addColorStop(0, '#7b4dff'); g.addColorStop(1, '#ff5a6e');
+    ctx.fillStyle = g; roundRect(ix, iy, iw, iw, iw * 0.22); ctx.fill();
+    drawBall(W / 2 - iw * 0.2, iy + iw * 0.62, iw * 0.13, 'R');
+    drawBall(W / 2, iy + iw * 0.4, iw * 0.13, 'G');
+    drawBall(W / 2 + iw * 0.2, iy + iw * 0.62, iw * 0.13, 'B');
+    text('Color Sort', W / 2, iy + iw + s * 0.09, s * 0.1, '#fff');
+    text('★★★★★  4.8', W / 2, iy + iw + s * 0.17, s * 0.05, '#ffd34d', 700);
+    text('500+ levels · play offline', W / 2, iy + iw + s * 0.23, s * 0.04, '#cfc6ff', 600);
+    ctaEnd = button(W / 2, H * (land ? 0.87 : 0.80), Math.min(W * 0.7, 300), Math.min(64, H * 0.09), 'PLAY NOW', true);
+  }
+
+  // ---- logic ----
+  function tubeAt(L, x, y) {
+    for (var i = 0; i < L.length; i++) {
+      var t = L[i];
+      if (x >= t.x - 10 && x <= t.x + t.w + 10 && y >= t.y - t.ball * 1.4 && y <= t.y + t.h + 10) return i;
+    }
+    return -1;
+  }
+  function canMove(a, b) {
+    if (a === b || !tubes[a].length || tubes[b].length >= CAP) return false;
+    return !tubes[b].length || tubes[b][tubes[b].length - 1] === tubes[a][tubes[a].length - 1];
+  }
+  function finishMove() {
+    var c = tubes[moving.from].pop(); tubes[moving.to].push(c);
+    moving = null; moves++;
+    if (isSolved()) win();
+  }
+  function isSolved() {
+    return tubes.every(function (t) { return !t.length || (t.length === CAP && t.every(function (c) { return c === t[0]; })); });
+  }
+  function win() {
+    won = true; hintOn = false;
+    var cols = ['#ffd34d', '#ff5a6e', '#4ee38a', '#55a8ff', '#fff'];
+    for (var i = 0; i < 90; i++) particles.push({ x: W / 2, y: H * 0.45, vx: (Math.random() - 0.5) * 14, vy: -Math.random() * 12 - 3, c: cols[i % cols.length], life: 90 });
+    setTimeout(function () { endCard = true; }, 1300);
+  }
+  function inRect(r, x, y) { return r && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
+
+  function openStore() {
+    if (window.mraid && typeof mraid.open === 'function') mraid.open(STORE_URL);
+    else window.open(STORE_URL, '_blank');
+  }
+
+  function onTap(e) {
+    e.preventDefault();
+    var p = e.changedTouches ? e.changedTouches[0] : e;
+    var x = p.clientX, y = p.clientY;
+    lastInput = performance.now();
+    if (inRect(ctaTop, x, y) || (endCard && inRect(ctaEnd, x, y))) { openStore(); return; }
+    if (endCard) { openStore(); return; }
+    if (moving || won) return;
+    var L = layout(), i = tubeAt(L, x, y);
+    if (i < 0) { selected = -1; return; }
+    if (selected < 0) { if (tubes[i].length) selected = i; return; }
+    if (canMove(selected, i)) { moving = { from: selected, to: i, color: tubes[selected][tubes[selected].length - 1], t: performance.now() }; hintOn = false; }
+    else if (i !== selected) { shake = { i: i, t: performance.now() }; }
+    selected = -1;
+  }
+
+  function loop(now) {
+    // auto end card: idle 15s or 30s total, as ad networks expect a CTA
+    if (!endCard && (now - lastInput > 15000 || now - startTime > 30000)) endCard = true;
+    draw(now);
+    requestAnimationFrame(loop);
+  }
+
+  function start() {
+    resize(); reset();
+    window.addEventListener('resize', resize);
+    canvas.addEventListener('touchstart', onTap, { passive: false });
+    canvas.addEventListener('mousedown', onTap);
+    requestAnimationFrame(loop);
+  }
+
+  // MRAID: start only when the ad is ready and visible
+  function mraidReady() {
+    if (mraid.isViewable()) start();
+    else mraid.addEventListener('viewableChange', function v(on) { if (on) { mraid.removeEventListener('viewableChange', v); start(); } });
+  }
+  if (window.mraid) {
+    if (mraid.getState() === 'loading') mraid.addEventListener('ready', mraidReady); else mraidReady();
+  } else {
+    start();
+  }
+})();
+</script>
+</body>
+</html>
